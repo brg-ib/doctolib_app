@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Entity
 public class Patient {
@@ -13,7 +14,7 @@ public class Patient {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @ApiModelProperty(notes = "Id",name="id",required=true,value="0")
-    private Long id;
+    private int id;
     @ApiModelProperty(notes = "Nom",name="name",required=true,value="testnom")
     private String nom;
     @ApiModelProperty(notes = "Prenom",name="prenom",required=true,value="testprenom")
@@ -23,19 +24,20 @@ public class Patient {
     @ApiModelProperty(notes = "Numéro sécurité social",name="ss",required=true,value="00000")
     private String ss;
 
+    private static final AtomicInteger count = new AtomicInteger(0);
+
+
     public Patient(String nom, String prenom, String ville, String ss) {
-        super();
+        this.id = count.incrementAndGet();
         this.nom = nom;
         this.prenom = prenom;
         this.ville = ville;
         this.ss = ss;
     }
 
-    public Patient() {
+    public Patient() {}
 
-    }
-
-    public Long getId() {
+    public int getId() {
         return id;
     }
     public String getNom() {

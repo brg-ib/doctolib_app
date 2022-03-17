@@ -30,28 +30,22 @@ public class PatientController {
 
         }
 
-        @ApiOperation(value = "Get list of Patients in the System ", response = Iterable.class, tags = "getPatients")
+        @ApiOperation(value = "Get list of Patients in the System ", response = Iterable.class, tags = "getAllPatients")
         @ApiResponses(value = {
-                @ApiResponse(code = 200, message = "Suceess|OK"),
+                @ApiResponse(code = 200, message = "Suceess | OK"),
                 @ApiResponse(code = 401, message = "not authorized!"),
                 @ApiResponse(code = 403, message = "forbidden !!!"),
                 @ApiResponse(code = 404, message = "not found !!!") })
 
-
-        @RequestMapping(value = "/")
-        public void Home() {
-
-        }
-
-
-        @RequestMapping(value = "/getPatients")
-        public List<Patient> getPatients() {
+       // @ApiOperation(value = "Get all Patients in the System ", response = Patient.class, tags = "getAllPatients")
+        @RequestMapping(value = "/getAllPatients")
+        public List<Patient> getAllPatients() {
             return patients;
         }
 
-        @ApiOperation(value = "Get specific Patient in the System ", response = Patient.class, tags = "getPatient")
-        @RequestMapping(value = "/getPatient/{nom}")
-        public Patient getPatient(@PathVariable(value = "nom") String name) {
+        @ApiOperation(value = "Get specific Patient by Name in the System ", response = Patient.class, tags = "getPatientByName")
+        @RequestMapping(value = "/getPatientByName/{nom}")
+        public Patient getPatientByName(@PathVariable(value = "nom") String name) {
             return patients.stream().filter(x -> x.getNom().equalsIgnoreCase(name)).collect(Collectors.toList()).get(0);
         }
 
@@ -71,9 +65,10 @@ public class PatientController {
             return patients.stream().filter(x -> x.getSs().equals(ss)).collect(Collectors.toList());
         }
 
-    @PostMapping(value ="/patients")
-    public Patient createEmployee(@Valid @RequestBody Patient pat) {
-        return patientRepo.save(pat);
-    }
+        @ApiOperation(value = "Create specific Patient in the System ",response = Patient.class,tags="createPatient")
+        @PostMapping(value ="/patients")
+        public Patient createPatient(@Valid @RequestBody Patient patient) {
+            return patientRepo.save(patient);
+        }
 
 }
