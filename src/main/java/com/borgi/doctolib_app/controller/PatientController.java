@@ -7,14 +7,17 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.source.InvalidConfigurationPropertyValueException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.boot.context.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Api(value = "PatientController", description = "REST Apis related to Patient Entity !")
 @RestController
 public class PatientController {
 
@@ -61,7 +64,7 @@ public class PatientController {
 
         @ApiOperation(value = "Get specific Patient By Securite Social in the System ",response = Patient.class,tags="getPatientBySs")
         @RequestMapping(value = "/getPatientBySs/{ss}")
-        public List<Patient> getPatientBySs(@PathVariable(value = "securiteSocial") String ss) {
+        public List<Patient> getPatientBySs(@PathVariable(value = "ss") String ss) {
             return patients.stream().filter(x -> x.getSs().equals(ss)).collect(Collectors.toList());
         }
 
@@ -70,5 +73,31 @@ public class PatientController {
         public Patient createPatient(@Valid @RequestBody Patient patient) {
             return patientRepo.save(patient);
         }
+
+    @ApiOperation(value = "PUT specific Patient in the System ",response = Patient.class,tags="updatePatient")
+    @PutMapping("/patient/{id}")
+    public ResponseEntity<Patient> updatePatient(@PathVariable(value = "id") int id,
+                                                  @Valid @RequestBody Patient patientDetails) throws InvalidConfigurationPropertyValueException {
+        Patient patient = patientRepo.findById(id)
+                .orElseThrow(() -> new InvalidConfigurationPropertyValueException("Patient",patientRepo,"Patient not found for this id :: " + id));
+
+        patient.setNom(patientDetails.getNom());
+        patient.setPrenom(patientDetails.getPrenom());
+        patient.setVille(patientDetails.getVille());
+        patient.setSs(patientDetails.getSs());
+        final Patient updatedPatient = patientRepo.save(patient);
+        return ResponseEntity.ok(updatedPatient);
+    }
+
+    @ApiOperation(value = "Delete specific Patient in the System ",response = Patient.class,tags="deletePatient")
+    @DeleteMapping("/patient/{id}")
+    public ResponseEntity<HttpStatus> deletePatient(@PathVariable("id") int id) {
+        try {
+            patientRepo.deleteById(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 }

@@ -53,6 +53,26 @@ public class Patient {
         return ss;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
+    public void setPrenom(String prenom) {
+        this.prenom = prenom;
+    }
+
+    public void setVille(String ville) {
+        this.ville = ville;
+    }
+
+    public void setSs(String ss) {
+        this.ss = ss;
+    }
+
     @Override
     public String toString() {
         return "Patient\n [nom= "
