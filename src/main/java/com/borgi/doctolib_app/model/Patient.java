@@ -1,6 +1,5 @@
 package com.borgi.doctolib_app.model;
 
-import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,15 +11,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Patient {
 
 
-    @ApiModelProperty(notes = "Id",name="id",required=true,value="0")
     private int id;
-    @ApiModelProperty(notes = "Nom",name="name",required=true,value="testnom")
     private String nom;
-    @ApiModelProperty(notes = "Prenom",name="prenom",required=true,value="testprenom")
     private String prenom;
-    @ApiModelProperty(notes = "Ville",name="ville",required=true,value="testville")
     private String ville;
-    @ApiModelProperty(notes = "Numéro sécurité social",name="ss",required=true,value="00000")
     private String ss;
 
     private static final AtomicInteger count = new AtomicInteger(0);

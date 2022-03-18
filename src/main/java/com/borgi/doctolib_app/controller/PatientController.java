@@ -3,9 +3,7 @@ package com.borgi.doctolib_app.controller;
 import com.borgi.doctolib_app.model.Patient;
 
 import com.borgi.doctolib_app.repository.PatientRepository;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.source.InvalidConfigurationPropertyValueException;
 import org.springframework.http.HttpStatus;
@@ -24,7 +22,7 @@ public class PatientController {
     @Autowired
     PatientRepository patientRepo;
 
-        List<Patient> patients = new ArrayList<Patient>();
+        List<Patient> patients = new ArrayList<>();
         {
             patients.add(new Patient("Borgi", "Ihcen", "Tunis","1930516773453"));
             patients.add(new Patient("Azize", "Younes", "Rabat","196051670000"));
@@ -33,15 +31,8 @@ public class PatientController {
 
         }
 
-        @ApiOperation(value = "Get list of Patients in the System ", response = Iterable.class, tags = "getAllPatients")
-        @ApiResponses(value = {
-                @ApiResponse(code = 200, message = "Suceess | OK"),
-                @ApiResponse(code = 401, message = "not authorized!"),
-                @ApiResponse(code = 403, message = "forbidden !!!"),
-                @ApiResponse(code = 404, message = "not found !!!") })
 
-       // @ApiOperation(value = "Get all Patients in the System ", response = Patient.class, tags = "getAllPatients")
-        @RequestMapping(value = "/getAllPatients")
+        @RequestMapping(value = "/getAllPatients", method = RequestMethod.GET, produces = "application/json")
         public List<Patient> getAllPatients() {
             return patients;
         }
@@ -57,14 +48,12 @@ public class PatientController {
             patientRepo.deleteById(id);
         }
 
-        @ApiOperation(value = "Get specific Patient by Name in the System ", response = Patient.class, tags = "getPatientByName")
-        @RequestMapping(value = "/getPatientByName/{nom}")
+        @RequestMapping(value = "/getPatient/{nom}", method = RequestMethod.GET, produces = "application/json")
         public Patient getPatientByName(@PathVariable(value = "nom") String name) {
             return patients.stream().filter(x -> x.getNom().equalsIgnoreCase(name)).collect(Collectors.toList()).get(0);
         }
 
-        @ApiOperation(value = "Get specific Patient By Ville in the System ", response = Patient.class, tags = "getPatientByVille")
-        @RequestMapping(value = "/getPatientByVille/{ville}")
+        @RequestMapping(value = "/getPatient/{ville}", method = RequestMethod.GET, produces = "application/json")
         public List<Patient> getPatientByVille(@PathVariable(value = "ville") String ville) {
             System.out.println("Searching Patient in country : " + ville);
             List<Patient> patientsByVille = patients.stream().filter(x -> x.getVille().equalsIgnoreCase(ville))
@@ -73,19 +62,16 @@ public class PatientController {
             return patientsByVille;
         }
 
-        @ApiOperation(value = "Get specific Patient By Securite Social in the System ",response = Patient.class,tags="getPatientBySs")
-        @RequestMapping(value = "/getPatientBySs/{ss}")
+        @RequestMapping(value = "/getPatient/{ss}", method = RequestMethod.GET, produces = "application/json")
         public List<Patient> getPatientBySs(@PathVariable(value = "ss") String ss) {
             return patients.stream().filter(x -> x.getSs().equals(ss)).collect(Collectors.toList());
         }
 
-        @ApiOperation(value = "Create specific Patient in the System ",response = Patient.class,tags="createPatient")
         @PostMapping(value ="/patients")
         public Patient createPatient(@Valid @RequestBody Patient patient) {
             return patientRepo.save(patient);
         }
 
-    @ApiOperation(value = "PUT specific Patient in the System ",response = Patient.class,tags="updatePatient")
     @PutMapping("/patient/{id}")
     public ResponseEntity<Patient> updatePatient(@PathVariable(value = "id") int id,
                                                   @Valid @RequestBody Patient patientDetails) throws InvalidConfigurationPropertyValueException {
@@ -99,7 +85,6 @@ public class PatientController {
         return ResponseEntity.ok(updatedPatient);
     }
 
-    @ApiOperation(value = "Delete specific Patient in the System ",response = Patient.class,tags="deletePatient")
     @DeleteMapping("/patient/{id}")
     public ResponseEntity<HttpStatus> deletePatient(@PathVariable("id") int id) {
         try {
