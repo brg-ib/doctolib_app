@@ -1,7 +1,6 @@
 package com.borgi.doctolib_app.controller;
 
 import com.borgi.doctolib_app.model.Patient;
-
 import com.borgi.doctolib_app.repository.PatientRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@RequestMapping("/api")
 @RestController
 public class PatientController {
 
@@ -32,11 +32,10 @@ public class PatientController {
         }
 
 
-        @RequestMapping(value = "/getAllPatients", method = RequestMethod.GET, produces = "application/json")
+        @RequestMapping(value = "/Patients", method = RequestMethod.GET, produces = "application/json")
         public List<Patient> getAllPatients() {
             return patients;
         }
-
 
         public void savePatient(Patient patient){
             patientRepo.save(patient);
@@ -48,12 +47,17 @@ public class PatientController {
             patientRepo.deleteById(id);
         }
 
-        @RequestMapping(value = "/getPatient/{nom}", method = RequestMethod.GET, produces = "application/json")
+        @RequestMapping(value = "/patient/id/{id}", method = RequestMethod.GET, produces = "application/json")
+        public Patient getUserById(@PathVariable(value = "id") int id) {
+            return patients.stream().filter(x -> x.getId()==(id)).collect(Collectors.toList()).get(0);
+        }
+
+        @RequestMapping(value = "/patient/nom/{nom}", method = RequestMethod.GET, produces = "application/json")
         public Patient getPatientByName(@PathVariable(value = "nom") String name) {
             return patients.stream().filter(x -> x.getNom().equalsIgnoreCase(name)).collect(Collectors.toList()).get(0);
         }
 
-        @RequestMapping(value = "/getPatient/{ville}", method = RequestMethod.GET, produces = "application/json")
+        @RequestMapping(value = "/patient/ville/{ville}", method = RequestMethod.GET, produces = "application/json")
         public List<Patient> getPatientByVille(@PathVariable(value = "ville") String ville) {
             System.out.println("Searching Patient in country : " + ville);
             List<Patient> patientsByVille = patients.stream().filter(x -> x.getVille().equalsIgnoreCase(ville))
@@ -62,17 +66,17 @@ public class PatientController {
             return patientsByVille;
         }
 
-        @RequestMapping(value = "/getPatient/{ss}", method = RequestMethod.GET, produces = "application/json")
+        @RequestMapping(value = "/patient/ss/{ss}", method = RequestMethod.GET, produces = "application/json")
         public List<Patient> getPatientBySs(@PathVariable(value = "ss") String ss) {
-            return patients.stream().filter(x -> x.getSs().equals(ss)).collect(Collectors.toList());
+            return patients.stream().filter(x -> x.getSs().equalsIgnoreCase(ss)).collect(Collectors.toList());
         }
 
-        @PostMapping(value ="/patients")
+        @PostMapping(value ="/addPatient")
         public Patient createPatient(@Valid @RequestBody Patient patient) {
             return patientRepo.save(patient);
         }
 
-    @PutMapping("/patient/{id}")
+    @PutMapping("/patient/id/{id}")
     public ResponseEntity<Patient> updatePatient(@PathVariable(value = "id") int id,
                                                   @Valid @RequestBody Patient patientDetails) throws InvalidConfigurationPropertyValueException {
         Patient patient = patientRepo.findById(id)
@@ -85,7 +89,7 @@ public class PatientController {
         return ResponseEntity.ok(updatedPatient);
     }
 
-    @DeleteMapping("/patient/{id}")
+    @DeleteMapping("/patient/id/{id}")
     public ResponseEntity<HttpStatus> deletePatient(@PathVariable("id") int id) {
         try {
             patientRepo.deleteById(id);
