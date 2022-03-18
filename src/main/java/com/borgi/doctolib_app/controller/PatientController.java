@@ -3,6 +3,7 @@ package com.borgi.doctolib_app.controller;
 import com.borgi.doctolib_app.model.Patient;
 import com.borgi.doctolib_app.repository.PatientRepository;
 
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.source.InvalidConfigurationPropertyValueException;
 import org.springframework.http.HttpStatus;
@@ -28,11 +29,10 @@ public class PatientController {
             patients.add(new Patient("Azize", "Younes", "Rabat","196051670000"));
             patients.add(new Patient("Mendaci", "Zahir", "Alger","1990389342123"));
             patients.add(new Patient("Diop", "Awa", "Dakar","2970516630055"));
-
         }
 
 
-        @RequestMapping(value = "/Patients", method = RequestMethod.GET, produces = "application/json")
+        @RequestMapping(value = "/patients", method = RequestMethod.GET, produces = "application/json")
         public List<Patient> getAllPatients() {
             return patients;
         }
@@ -48,7 +48,7 @@ public class PatientController {
         }
 
         @RequestMapping(value = "/patient/id/{id}", method = RequestMethod.GET, produces = "application/json")
-        public Patient getUserById(@PathVariable(value = "id") int id) {
+        public Patient getPatientById(@PathVariable(value = "id") int id) {
             return patients.stream().filter(x -> x.getId()==(id)).collect(Collectors.toList()).get(0);
         }
 
@@ -71,12 +71,8 @@ public class PatientController {
             return patients.stream().filter(x -> x.getSs().equalsIgnoreCase(ss)).collect(Collectors.toList());
         }
 
-        @PostMapping(value ="/addPatient")
-        public Patient createPatient(@Valid @RequestBody Patient patient) {
-            return patientRepo.save(patient);
-        }
 
-    @PutMapping("/patient/id/{id}")
+/*    @PutMapping("/patient/id/{id}")
     public ResponseEntity<Patient> updatePatient(@PathVariable(value = "id") int id,
                                                   @Valid @RequestBody Patient patientDetails) throws InvalidConfigurationPropertyValueException {
         Patient patient = patientRepo.findById(id)
@@ -97,6 +93,6 @@ public class PatientController {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
+    } */
 
 }
