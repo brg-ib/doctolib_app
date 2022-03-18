@@ -23,18 +23,11 @@ public class ListPatientController {
     @Autowired
     ListPatientService service;
 
-    List<Patient> patients = new ArrayList<>();
-    {
-        patients.add(new Patient("Borgi", "Ihcen", "Tunis","1930516773453"));
-        patients.add(new Patient("Azize", "Younes", "Rabat","196051670000"));
-        patients.add(new Patient("Mendaci", "Zahir", "Alger","1990389342123"));
-        patients.add(new Patient("Diop", "Awa", "Dakar","2970516630055"));
-    }
-
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Execute GET method")
     public ResponseEntity<List<Patient>> listAllPatients_whenGetPatients() {
         return ResponseEntity.ok().body(service.listAllPatients());
     }
+
 }

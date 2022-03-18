@@ -22,7 +22,7 @@ public class CreatePatientController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-   @Operation(summary = "Execute POST method")
+    @Operation(summary = "Execute POST method")
     public ResponseEntity<Patient> createNewPatient_whenPostPatient(@RequestBody Patient patient) {
 
         Patient createdUser = service.createNewPatient(patient);
