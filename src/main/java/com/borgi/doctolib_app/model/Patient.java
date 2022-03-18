@@ -11,8 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Entity
 public class Patient {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+
     @ApiModelProperty(notes = "Id",name="id",required=true,value="0")
     private int id;
     @ApiModelProperty(notes = "Nom",name="name",required=true,value="testnom")
@@ -37,6 +36,8 @@ public class Patient {
 
     public Patient() {}
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int getId() {
         return id;
     }

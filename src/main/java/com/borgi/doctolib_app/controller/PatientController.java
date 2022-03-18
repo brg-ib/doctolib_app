@@ -1,8 +1,8 @@
 package com.borgi.doctolib_app.controller;
 
 import com.borgi.doctolib_app.model.Patient;
+
 import com.borgi.doctolib_app.repository.PatientRepository;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -11,11 +11,11 @@ import org.springframework.boot.context.properties.source.InvalidConfigurationPr
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.boot.context.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -44,6 +44,17 @@ public class PatientController {
         @RequestMapping(value = "/getAllPatients")
         public List<Patient> getAllPatients() {
             return patients;
+        }
+
+
+        public void savePatient(Patient patient){
+            patientRepo.save(patient);
+        }
+        public Optional<Patient> getPatient(Integer id){
+            return patientRepo.findById(id);
+        }
+        public void deletePatient(Integer id){
+            patientRepo.deleteById(id);
         }
 
         @ApiOperation(value = "Get specific Patient by Name in the System ", response = Patient.class, tags = "getPatientByName")
@@ -80,7 +91,6 @@ public class PatientController {
                                                   @Valid @RequestBody Patient patientDetails) throws InvalidConfigurationPropertyValueException {
         Patient patient = patientRepo.findById(id)
                 .orElseThrow(() -> new InvalidConfigurationPropertyValueException("Patient",patientRepo,"Patient not found for this id :: " + id));
-
         patient.setNom(patientDetails.getNom());
         patient.setPrenom(patientDetails.getPrenom());
         patient.setVille(patientDetails.getVille());
